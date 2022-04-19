@@ -1,0 +1,39 @@
+﻿@model FitnessSiteMVC.Models.ViewModels.ProfileVM
+    <div class="profile-container">
+
+        <div class="card header">
+            <h2>Profile</h2>
+            <a asp-action="Edit" asp-controller="Profile" asp-route-id="@Model.Id"><i class="fas fa-edit"></i></a>
+        </div>
+        <div class="card profile-group">
+            <div class="">
+                <h2>Height</h2>
+                <h2>@Model.Height</h2>
+            </div>
+            <div>
+                <h2>Weight</h2>
+                <h2>@Model.Weight</h2>
+            </div>
+            <div>
+                <h2>Target Weight</h2>
+                <h2>@Model.TargetWeight</h2>
+            </div>
+            <div>
+                <h2>Sex</h2>
+                <h2>@Model.Gender</h2>
+            </div>
+            <div>
+                <h2>Age</h2>
+                <h2>@Model.Age</h2>
+            </div>
+            <div>
+                <h2>BMI</h2>
+                <h2>@Model.BMI</h2>
+            </div>
+            <div>
+                <h2>BMR</h2>
+                <h2>@Model.BMR</h2>
+            </div>
+
+        </div>
+    </div>

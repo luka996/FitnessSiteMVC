@@ -1,0 +1,33 @@
+﻿@model FitnessSiteMVC.Models.LoginModel
+
+<div class="login-container card">
+    <h1>Login</h1>
+    <h3 class="Error-text">@ViewBag.Message</h3>
+    <form asp-action="Login" asp-controller="Account" method="post">
+        <div class="group">
+            <h3>Username</h3>
+            <input type="text" asp-for="Username" />
+            <span asp-validation-for="Username"></span>
+        </div>
+        <div class="group">
+            <h3>Password</h3>
+            <input type="password" asp-for="Password" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <input type="submit" value="Login" />
+    </form>
+
+    <a asp-action="Register" asp-controller="Account">Sign Up</a>
+
+</div>
+
+
+@section Scripts{
+    <script>
+        var inputs = document.querySelectorAll("input");
+        inputs.forEach(input => input.addEventListener("focus", function () {
+            document.querySelector(".Error-text").textContent = "";
+        }));
+        console.log(inputs);
+    </script>
+}

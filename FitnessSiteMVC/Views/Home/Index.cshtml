@@ -1,0 +1,129 @@
+﻿@model FitnessSiteMVC.Models.ViewModels.EntryVM
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container-main-page">
+    <div class="diary">
+
+        <div class="date-container">
+            <button class="left-nav nav" id="left">
+                <i class="fas fa-angle-double-left fa-3x"></i>
+            </button>
+            <p class="date"></p>
+            <button class="right-nav nav" id="right">
+                <i class="fas fa-angle-double-right fa-3x"></i>
+            </button>
+        </div>
+        <div class="entry-container">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <partial name="_FoodItemEntry" model="@Model.FoodItems" />
+            }
+            else
+            {
+                <partial name="_EmptyEntry" model="@Model.FoodItems" />
+            }
+
+        </div>
+        <a id="SearchBtn" asp-action="Search" asp-controller="FoodItem" asp-route-id="@Model.ID">
+            Add
+        </a>
+    </div>
+
+    <div class="entryData">
+        <partial name="_EntryTotals" model="@Model" />
+    </div>
+</div>
+
+@section Scripts{ 
+    
+    <script>
+
+        $.ajaxSetup({
+            statusCode: {
+                401: function () {
+                    window.location = "/Account/Login";
+                }
+            }
+        })
+        
+
+        var date = new Date();
+        var txtDate = document.querySelector(".date");
+        txtDate.textContent = date.toLocaleDateString();
+
+        const leftBtn = document.getElementById("left");
+        const rightBtn = document.getElementById("right");
+
+        leftBtn.addEventListener("click", function () {
+            txtDate.textContent = DecrementDate(date);
+            LoadEntryData(date);
+            LoadEntryTotal(date);
+        })
+
+        rightBtn.addEventListener("click", function () {
+            txtDate.textContent = IncrementDate(date);
+            LoadEntryData(date);
+            LoadEntryTotal(date);
+
+        })
+
+        function IncrementDate(date) {
+            date.setDate(date.getDate() + 1)
+            return date.toLocaleDateString();
+        }
+
+        function DecrementDate(date) {
+            date.setDate(date.getDate() - 1);
+            return date.toLocaleDateString();
+        }
+
+        function LoadEntryData(date) {
+            $.ajax({
+                url: '/Home/GetEntryByDate',
+                dataType: "html",
+                type: 'GET',
+                cache: 'false',
+                data: {
+                    date: date.toJSON(),
+                    ProfileId : @Model.ProfileId
+                },
+                success: function (data) {
+                    $(".entry-container").html(data);
+                },
+                error: function () {
+
+                }
+            })
+        }
+
+        function LoadEntryTotal(date) {
+            $.ajax({
+                url: '/Home/GetEntryTotals',
+                dataType: "html",
+                type: 'GET',
+                cache: 'false',
+                data: {
+                    date: date.toJSON(),
+                    ProfileId: @Model.ProfileId
+                },
+                success: function (data) {
+                    $(".entryData").html(data);
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+        function deleteItem(form) {
+
+            $(form).parentsUntil(".entry-container").remove();
+            LoadEntryTotal(date);
+        }
+
+
+    </script>
+    
+}

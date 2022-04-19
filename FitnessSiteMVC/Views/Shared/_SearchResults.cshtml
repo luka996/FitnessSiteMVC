@@ -1,0 +1,42 @@
+﻿@model FitnessSiteMVC.Models.FoodSearchResults
+
+@foreach (var item in Model.SearchResults)
+{
+
+<div class="entries-container">
+    <div class="entry-container">
+        <div class="title">
+            <h2>@item.BrandName @item.LowerDescription.ToUpper()</h2>
+        </div>
+        <div class="nutrinet-wrapper">
+            @for (int i = 0; i < item.FoodNutrients.Count; i++)
+            {
+                <div class="nutrient-container">
+                    <h3 class="nutrient-symbol">@item.FoodNutrients[i].NutrientName</h3>
+                    <h3 class="value">@item.FoodNutrients[i].Value @item.FoodNutrients[i].UnitName</h3>
+                </div>
+            }
+        </div>
+    </div>
+
+    
+        <div class="col-md-4">
+            <form asp-action="Create" asp-controller="Fooditem" id="createForm">
+                <input type="hidden" id="EntryId" name="EntryId" value="@item.EntryId" />
+                <input id="LowerDescription" name="LowerDescription" value="@item.LowerDescription" type="hidden" />
+
+                <input id="BrandName" name="BrandName" value="@item.BrandName" type="hidden" />
+
+                @for (int i = 0; i < item.FoodNutrients.Count; i++)
+                {
+                    <input id="NutrientName" name="FoodNutrients[@i].NutrientName" value="@item.FoodNutrients[i].NutrientName" type="hidden" />
+                    <input id="NutrinetValue" name="FoodNutrients[@i].Value" value="@item.FoodNutrients[i].Value" type="hidden" />
+                    <input id="UnitName" name="FoodNutrients[@i].UnitName" value="@item.FoodNutrients[i].UnitName" type="hidden" />
+                }
+
+                <input type="submit" value="Add"  id="addEntry" />
+            </form>
+        </div>
+    
+</div>
+}

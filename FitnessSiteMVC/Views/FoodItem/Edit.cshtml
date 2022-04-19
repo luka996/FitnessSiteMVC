@@ -1,0 +1,143 @@
+﻿@model FitnessSiteMVC.Models.ViewModels.FoodItemVM
+<div class="create-container">
+    <div class="Name card">
+        <h1>@Model.BrandName @Model.LowerDescription</h1>
+        <div>
+            <h1>Amount</h1>
+            <input type="number" name="" id="amount-input" value="@Model.Amount">
+        </div>
+    </div>
+
+
+    <div class="Nutrinets card">
+        <h1>Nutrinets</h1>
+        <div class="nutrient">
+            <h1>Calories</h1>
+            <h1 id="calories-amount">@Model.FoodNutrients[3].Value </h1>
+        </div>
+        <div class="nutrient">
+            <h1>Fat</h1>
+            <h1 id="fat-amount">@Model.FoodNutrients[1].Value </h1>
+        </div>
+        <div class="nutrient">
+            <h1>Protein</h1>
+            <h1 id="protein-amount">@Model.FoodNutrients[0].Value</h1>
+        </div>
+        <div class="nutrient">
+            <h1>Carbohydrates</h1>
+            <h1 id="carbs-amount">@Model.FoodNutrients[2].Value</h1>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" asp-controller="Fooditem" id="createForm" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" class="form-control" type="hidden" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
+                <input asp-for="LowerDescription" class="form-control" type="hidden" />
+                <span asp-validation-for="LowerDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="BrandName" class="form-control" type="hidden" />
+                <span asp-validation-for="BrandName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Amount" class="form-control" type="hidden" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="EntryId" class="form-control" type="hidden" />
+                <span asp-validation-for="EntryId" class="text-danger"></span>
+            </div>
+
+
+            @for (int i = 0; i < Model.FoodNutrients.Count; i++)
+            {
+                <div class="form-group">
+
+                    <input asp-for="FoodNutrients[i].NutrientName" class="form-control" type="hidden" />
+
+                </div>
+
+                <div class="form-group">
+
+                    <input asp-for="FoodNutrients[i].Value" class="form-control" type="hidden" />
+                    <span asp-validation-for="FoodNutrients[i].Value" class="text-danger"></span>
+                </div>
+            }
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="card btn" />
+            <a asp-action="Index" asp-controller="Home" class="card btn">Cancel</a>
+        </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    
+</div>
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        var form = document.getElementById("createForm");
+        
+        var amount = document.getElementById("amount-input");
+        var protein = document.getElementById("protein-amount");
+        var calories = document.getElementById("calories-amount");
+        var fat = document.getElementById("fat-amount");
+        var carbs = document.getElementById("carbs-amount");
+        var originalAmount = parseFloat(amount.value);
+        
+
+        var caloriesValue = parseFloat(calories.textContent);
+        var carbsValue = parseFloat( carbs.textContent);
+        var fatValue = parseFloat( fat.textContent);
+        var proteinValue = parseFloat(protein.textContent);
+
+        amount.addEventListener("input", (e) => {
+            protein.textContent = CalculateNutrient(proteinValue,originalAmount);
+            calories.textContent = CalculateNutrient(caloriesValue, originalAmount);
+            fat.textContent = CalculateNutrient(fatValue, originalAmount);
+            carbs.textContent = CalculateNutrient(carbsValue, originalAmount);
+
+            form.FoodNutrients_0__Value.value = protein.textContent;
+            form.FoodNutrients_1__Value.value = fat.textContent;
+            form.FoodNutrients_2__Value.value = carbs.textContent;
+            form.FoodNutrients_3__Value.value = calories.textContent;
+
+            form.Amount.value = amount.value;
+
+
+        })
+
+        function CalculateNutrient(nutrinet, originalAmount) {
+            var result = 0;
+            var amountValue = parseFloat(amount.value);
+            var i = parseFloat(originalAmount);
+            if (Number.isNaN(amount)) {
+                return 0;
+            }
+            else {
+                result = (nutrinet / i) * amountValue;
+                return result.toFixed(1);
+            }
+
+        }
+    </script>
+}

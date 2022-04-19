@@ -1,0 +1,64 @@
+﻿@model FitnessSiteMVC.Models.FoodItem
+
+
+
+<div class="searchContainer">
+    <form action="/" method="post" id="searchForm">
+        <input type="hidden" value="@ViewBag.Id" id="entryId" name="entryId" />
+        <input type="text" autocomplete="off" class="search-input" name="" id="query"><input type="submit" value="Search" id="search-button">
+
+    </form>
+</div>
+
+<div class="results">
+    
+</div>
+<h2 class="Error-text"></h2>
+<img class="loading-spinner" id="spinner" src="~/Spinner.gif" alt="Alternate Text" />
+
+
+@section Scripts
+{ 
+    <script>
+        var searchForm = document.getElementById("searchForm");
+        var ErrorText = document.querySelector(".Error-text");
+        $("#spinner").hide();
+        $(document).ajaxSend(function () {
+            $(".results").html("");
+            $("#spinner").show();
+        });
+
+        searchForm.query.addEventListener("focus", (e) => {
+            ErrorText.textContent = "";
+        })
+
+        searchForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            if (searchForm.query.value == "") {
+                ErrorText.textContent = "Search bar is empty";
+            }
+            else {
+                var q = searchForm.query.value;
+                var id = searchForm.entryId.value;
+                console.log(id);
+                $.ajax({
+                    url: '/FoodItem/Search',
+                    dataType: "html",
+                    type: 'POST',
+                    cache: 'false',
+                    data: {
+                        q: q,
+                        id: id
+                    }
+
+                }).done(function (result) {
+                    $("#spinner").hide();
+                    $('.results').html(result);
+                });
+            }
+
+            
+            
+        });
+    </script>
+}

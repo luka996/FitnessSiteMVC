@@ -1,0 +1,25 @@
+﻿@model List<FitnessSiteMVC.Models.ViewModels.FoodItemVM>
+
+
+@foreach (var item in Model)
+{
+    <div class="diary-entry">
+        <div class="entry-wrapper">
+            <p>@item.BrandName @item.LowerDescription</p>
+            <p>@item.FoodNutrients[3].Value kcal</p>
+        </div>
+        <div class="controls-wrapper">
+
+            <a asp-controller="FoodItem" asp-action="Edit" asp-route-id="@item.Id" class="edit">
+                <i class="fas fa-edit"></i>
+            </a>
+            <form asp-action="Delete" asp-controller="FoodItem" data-ajax="true" data-ajax-success="deleteItem(this)">
+                <input type="hidden" value="@item.Id"  name="id"/>
+                <button type="submit" class="DeleteButton"><i class="fas fa-trash"></i></button>
+            </form>
+
+        </div>
+    </div>
+}
+
+
